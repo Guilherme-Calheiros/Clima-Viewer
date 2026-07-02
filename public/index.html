@@ -1,65 +1,170 @@
 <!DOCTYPE html>
-<html lang="pt=br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/reset.css">
-    <link rel="stylesheet" href="style/style.css">
-    <title>Clima Viewer</title>
-    <script src="scripts/script.js" defer></script>
-    <!--Font Awesome-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clima Viewer</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="style/style.css">
+  <script src="scripts/script.js" defer></script>
 </head>
-<body>
-    <div id="container">
-        <div id="headerContainer">
-            <h1>Clima <span>View</span></h1>
-            <div id="searchDiv">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchText" placeholder="Digite o nome de uma cidade">
-            </div>
+<body class="day">
+  <main id="app">
+    <header class="app-header">
+      <h1 class="logo">Clima <span class="logo-highlight">View</span></h1>
+      <form class="search-form" id="searchForm" role="search" aria-label="Buscar cidade">
+        <div class="search-wrapper">
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Buscar cidade..."
+            aria-label="Nome da cidade"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button type="submit" class="search-btn" id="searchBtn" aria-label="Buscar clima">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          </button>
         </div>
-        <div id="weatherData" class="hide">
-            <div id="mainInformation">
-                <h2 id="location">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span id="city"></span>
-                </h2>
-                <div id="weatherConditions">
-                    <img src="" alt="Condição do tempo" id="weatherIcon">
-                    <h2 id="description"></h2>
-                </div>
-            </div>
-            <div id="additionalInformation">
-                <div id="degree">
-                    <p>
-                        <i class="fa-solid fa-temperature-half"></i>
-                        Temperatura
-                    </p>
-                    <div><span></span>&deg;C</div>
-                </div>
-                <div id="humidity">
-                    <p>
-                        <i class="fa-solid fa-droplet"></i>
-                        Umidade
-                    </p>
-                    <span></span>
-                </div>
-                <div id="wind">
-                    <p>
-                        <i class="fa-solid fa-wind"></i>
-                        Vento
-                    </p>
-                    <span></span>
-                </div>
-            </div>
+      </form>
+    </header>
+
+    <section id="weatherDisplay" class="weather-display hidden" aria-live="polite">
+      <div class="weather-hero">
+        <div class="weather-icon-wrapper">
+          <img id="weatherIcon" src="" alt="Condição do tempo">
         </div>
-        <div id="error-message" class="hide">
-            <p>Não foi possível encontrar o clima de uma cidade com este nome.</p>
+        <div class="weather-info">
+          <div class="temp-group">
+            <span class="temp-value" id="tempValue">--</span>
+            <span class="temp-unit">°C</span>
+          </div>
+          <p class="feels-like" id="feelsLike">Sensação: --°C</p>
+          <p class="weather-description" id="description">--</p>
+          <p class="location-info">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <span id="city">--</span>
+            <span class="country-badge" id="country">--</span>
+          </p>
         </div>
-        <div id="loader" class="hide">
-            <i class="fa-solid fa-spinner"></i>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-temperature-low" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Mínima</span>
+            <span class="stat-value" id="tempMin">--°</span>
+          </div>
         </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-temperature-high" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Máxima</span>
+            <span class="stat-value" id="tempMax">--°</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-droplet" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Umidade</span>
+            <span class="stat-value" id="humidity">--%</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-wind" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Vento</span>
+            <span class="stat-value" id="windSpeed">-- km/h</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Pressão</span>
+            <span class="stat-value" id="pressure">-- hPa</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-eye" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Visibilidade</span>
+            <span class="stat-value" id="visibility">-- km</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-cloud" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Nebulosidade</span>
+            <span class="stat-value" id="clouds">--%</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-location-arrow" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Dir. Vento</span>
+            <span class="stat-value" id="windDirection">--</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-sun" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Nascer do sol</span>
+            <span class="stat-value" id="sunrise">--:--</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon"><i class="fa-solid fa-moon" aria-hidden="true"></i></span>
+          <div class="stat-body">
+            <span class="stat-label">Pôr do sol</span>
+            <span class="stat-value" id="sunset">--:--</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="skeleton" class="skeleton hidden" aria-hidden="true">
+      <div class="skeleton-hero">
+        <div class="skeleton-circle"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w-40"></div>
+          <div class="skeleton-line w-60"></div>
+          <div class="skeleton-line w-30"></div>
+        </div>
+      </div>
+      <div class="skeleton-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
     </div>
+
+    <div id="errorMessage" class="error-message hidden" role="alert">
+      <div class="error-content">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        <p id="errorText">Não foi possível encontrar o clima para esta cidade.</p>
+      </div>
+    </div>
+
+    <div id="emptyState" class="empty-state">
+      <div class="empty-content">
+        <i class="fa-solid fa-cloud-sun" aria-hidden="true"></i>
+        <p class="empty-title">Pesquise por uma cidade</p>
+        <p class="empty-sub">Digite o nome de qualquer cidade para ver as condições atuais do tempo</p>
+      </div>
+    </div>
+  </main>
 </body>
 </html>
