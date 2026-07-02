@@ -9,11 +9,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 const apiKey = process.env.API_KEY;
 
-if (!apiKey) {
-  console.error('API_KEY não encontrada no arquivo .env');
-  process.exit(1);
-}
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/weather', async (req, res) => {
@@ -38,6 +33,10 @@ app.get('/api/weather', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+  });
+}
+
+export default app;
